@@ -1,7 +1,11 @@
+using AutoMapper;
+using CodersAcademy.API.Repository;
+using CodersAcademy.API.ViewModel.Profile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +32,17 @@ namespace CodersAcademy.API
         {
 
             services.AddControllers();
+
+            services.AddDbContext<MusicContext>(c =>
+            {
+                c.UseSqlite(this.Configuration.GetConnectionString("BootcampConnection"));
+            });
+
+            services.AddScoped<AlbumRepository>();
+            services.AddScoped<UserRepository>();
+
+            services.AddAutoMapper(typeof(Startup).Assembly);
+               
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo()
